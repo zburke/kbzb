@@ -1,0 +1,87 @@
+kbzb version 0.01
+============================
+
+Kbzb (pronounced 'kib-zib') is a Perl port of CodeIgniter, a kick-ass
+web application framework for PHP. CodeIgniter's goal "is to enable 
+you to develop projects much faster than you could if you were writing 
+code from scratch, by providing a rich set of libraries for commonly 
+needed tasks, as well as a simple interface and logical structure to 
+access these libraries."
+
+Why write yet another web framework when so many already exist 
+(Maypole, Catalyst, Jifty. CGI::Prototype, CGI::Application, 
+Gantry...)? I've worked in many shops with apps written in both Perl 
+and PHP, and maintenance is a headache because everything is done so 
+differently. This addresses that. And as much as I'm a big fan of 
+CodeIgniter?, I'm not a big fan of PHP. This addresses that, too.
+
+
+
+DIFFERENCES FROM CodeIgniter
+
+The places where Kbzb diverges from CodeIgniter are few but significant: 
+namespaces, database access, HTML templating, configuration. 
+
+1. Perl packages provide namespaces, something most PHP versions sorely
+   lack. Kbzb uses packages as a simpler and cleaner alternative to some 
+   of the funky classloading tricks CodeIgniter goes through to allow 
+   you to extend or replace core libraries and to load helper modules. 
+ 
+2. Perl has long provided a high-level database abstraction package in 
+   DBI, something PHP sorely lacked until PDO came along.
+
+3. Kbzb templates are not Perl scripts in the sense that CodeIgniter
+   templates are PHP scripts. Kbzb's template system is rather like
+   a light version of the well-known and widely-used Template::Toolkit
+   module; see the kbzb::libraries::parser module for details. 
+
+4. Kbzb configuration files are just that: plain text config files. 
+   CodeIgniter configuration files are PHP scripts that are include'ed
+   or require'ed into a class. This may change in a later version.
+
+
+INSTALLATION
+
+You can install this module in the traditional way (perl Makefile.PL ...) 
+or you can simply copy ./cgi-bin/kbzb.cgi into your webroot, and edit a 
+few lines as indicated in the comments so that it knows where to find its 
+libraries.
+
+To install this module in the traditional way, do the following:
+
+   $ perl Makefile.PL
+   $ make
+   $ make test
+   $ make install
+   
+   $ cp cgi-bin/kbzb.cgi /path/to/cgi-bin/some-app/index.cgi
+   $ cp -R app /path/to/app/directory/
+   
+   edit the CGI script, setting the BASEPATH, APPPKG and APPPATH 
+   variables as instructed by the comments. 
+
+
+DEPENDENCIES
+
+Except for the database classes, Kbzb's core modules have NO dependencies
+outside Perl 5.8.0. To use the database classes, you need the database
+abstraction layer DBI (http://dbi.perl.org/) and a platform-specific 
+implementation layer provided by DBD 
+(http://www.cpan.org/modules/by-module/DBD/), but everything else should run 
+out of the box. This is, perhaps, a bad idea as CPAN provides all manner of 
+modules which could make have made writing Kbzb easier. But part of 
+CodeIgniter's philosophy is to make installation easy and dependency-free, 
+and this project carries that forward.
+
+
+COPYRIGHT AND LICENSE
+
+This software is derived from CodeIgniter 1.7.1, Copyright (c) 2008, EllisLab, Inc.
+
+Copyright (C) 2009 by Zak Burke
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.10.0 or,
+at your option, any later version of Perl 5 you may have available.
+
+
