@@ -1,0 +1,101 @@
+<?perl
+
+use Time::HiRes qw(gettimeofday);
+my ($seconds, $microseconds) = gettimeofday;
+my @fruit = qw(apples bananas cherries oranges grapes);
+?>
+<html>
+<head>
+<title>Welcome to kbzb</title>
+<style type="text/css">
+
+body {
+ background-color: #fff;
+ margin: 40px;
+ font-family: Lucida Grande, Verdana, Sans-serif;
+ font-size: 14px;
+ color: #4F5155;
+}
+
+a {
+ color: #003399;
+ background-color: transparent;
+ font-weight: normal;
+}
+
+h1 {
+ color: #444;
+ background-color: transparent;
+ border-bottom: 1px solid #D0D0D0;
+ font-size: 16px;
+ font-weight: bold;
+ margin: 24px 0 2px 0;
+ padding: 5px 0 6px 0;
+}
+
+code {
+ font-family: Monaco, Verdana, Sans-serif;
+ font-size: 12px;
+ background-color: #f9f9f9;
+ border: 1px solid #D0D0D0;
+ color: #002166;
+ display: block;
+ margin: 14px 0 14px 0;
+ padding: 12px 10px 12px 10px;
+}
+
+</style>
+</head>
+<body>
+
+<h1>Welcome to kbzb</h1>
+
+<p>The page you are looking at is being generated dynamically by kbzb.</p>
+
+<p>If you would like to edit this page you'll find it located at:</p>
+<code>app/views/welcome_message.tmpl</code>
+
+<p>The corresponding controller for this page is found at:</p>
+<code>app/controllers/hello.pm</code>
+
+<p>If you are exploring kbzb for the very first time, you should start by reading the <a href="user_guide/">User Guide</a>.</p>
+
+<p><br />Base Url: <?perl
+# base_url()
+?> </p>
+
+<p><br />Package: <?= ref($self) ?> </p>
+
+<ul>
+<?perl foreach my $f(@fruit) { ?>
+	<li><?=$f?></li>
+<?perl } ?>
+</ul>
+
+
+<p><br />append_out: <?perl print "something"; ?></p>
+
+<p><br /><a href="scaffold/">db test</a></p>
+
+<p><br />Something random: <?= rand_id(30) ?></p>
+
+<p><br />Some more random: <?= random_string() ?> Mode: </p>
+
+<p><br />Page rendered in <?perl
+
+# lots of space for everything, comments, etc.
+my ($elapsed_seconds, $elapsed_usecs) = gettimeofday;
+print ((($elapsed_seconds + $elapsed_usecs) - ($seconds + $microseconds)) / 1000);
+
+
+?> seconds</p>
+
+<?= $self->render('testing_stuff', 1); ?>
+
+</body>
+</html>
+
+Microseconds: <?= $microseconds ?>
+
+<br />
+last line
