@@ -1,5 +1,7 @@
 package app::controllers::hello; 
 
+# -- $Id$
+
 use kbzb::libraries::controller;
 use kbzb::helpers::url qw( base_url );
 use kbzb::helpers::string qw( random_string );
@@ -28,22 +30,7 @@ sub index
 	
 	my $c = $self->config();
 	
-	# $self->load->helper('url');
-	
-	my $bacon = { 'pack' => $self->{package}, me => $self, user => $>, url => base_url(), config => Dumper(kbzb::APPPATH()), coderef => $v };
-	
-	
-	# my $v =  sub { $self->load->view(@_); };
-	# $v->('welcome_message', $bacon);
-	# print "Content-type: text/html\n\n";
-	
-	
-	# $kbzb::out->append_output($self->tpl('welcome_message', 1));
-	
 	$self->render('welcome_message');
-	
-	# print "Content-type: text/html\n\n".$html;
-	# $kbzb::out->append_output("something")
 }
 
 # this is a special kind of random string generator that always begins with a letter.
