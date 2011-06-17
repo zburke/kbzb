@@ -14,6 +14,7 @@
 # -- NO TRAILING SLASH!
 
 $config->{'BASEPATH'} = '/Users/zburke/workspace/kbzb/lib';
+if(!-d $config->{'BASEPATH'}) { $config->{'BASEPATH'} = '/home/dynamo/Documents/SVN_kbzb/kbzb/lib'; }
 
 
 
@@ -41,6 +42,7 @@ $config->{'APPPKG'} = 'app';
 # -- NO TRAILING SLASH!
 
 $config->{'APPPATH'} = '/Users/zburke/workspace/kbzb';
+if(!-d $config->{'APPPATH'}) { $config->{'APPPATH'} = '/home/dynamo/Documents/SVN_kbzb/kbzb'; }
 
 
 
