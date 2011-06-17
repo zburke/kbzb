@@ -36,6 +36,95 @@ sub new
 	
 }
 
+sub render {
+	my ($self, $tpl, $return) = @_;
+	open(TPL, "<".kbzb::APPPATH().'app/views/'.$tpl.'.tmpl');
+	my $entirefile = join('', <TPL>);
+	($entirefile) = ($entirefile =~ /(.+)/s); # untainting
+	close(TPL);
+	
+	my $buffer_ref;
+	my $buffer_fh;
+	my $orig_fh;
+	open($buffer_fh, ">", \$buffer_ref);
+	$orig_fh = select $buffer_fh;
+	
+	# split the file into delimiters and segments:
+	my @segments = split(/(<\?perl|<\?=|[^\\]{1}\?>)/gs, $entirefile);
+	
+	# save some memory:
+	undef $entirefile;
+	
+	# parse the template file into eval-able perl:
+	# TODO: come up with a way to cache these for performance
+	my $mode = 'text';
+	my ($open_seg, $seg_varname, $last_mode, $trail_char, $i);
+	my $translated = 'package '.ref($self).'; my $run_tpl = sub { my $self = $_[0]; my $OUT;'."\n";
+	foreach my $seg(@segments) {
+		if($seg eq '<?perl' || $seg eq '<?=') {
+			$last_mode = $mode;
+			$mode = 'code';
+			$open_seg = $seg;
+			if($segments[$i + 2] =~ /([^\\]{1})\?>/s) {
+				$trail_char = $1;
+			}
+		}
+		
+		elsif($seg =~ /[^\\]{1}\?>/s && $mode eq 'code') {
+			$last_mode = $mode;
+			$mode = 'text';
+		}
+		
+		else {
+			if($mode eq 'code') {
+				if($i > 1 && $segments[$i] ne '') {
+					if($open_seg eq '<?=') {
+						$translated .= 'print ';
+					}
+					$translated .= $segments[$i].$trail_char;
+					if($open_seg eq '<?=') {
+						$translated .= ";\n";
+					}
+				}
+			}
+			
+			if($mode eq 'text') {
+				if($segments[$i] ne '') {
+					$seg_varname = $self->rand_id();
+					$translated .= "\$OUT = <<'$seg_varname';\n".$segments[$i]."\n$seg_varname\n".'$OUT =~ s/\n$//'.";print \$OUT;\n";
+				}
+			}
+		}
+		$i++;
+	}
+	
+	$translated .= '}; $run_tpl->($self);';
+	
+	
+	# run the parsed perl code:
+	my $err = $self->expand($translated);
+	
+	if($err) { $buffer_ref .= 'In parsing '.$tpl.".tmpl:<br />".$err."\n"; }
+	
+	# get print statements routing back where they belong:
+	close($buffer_fh); select $orig_fh;
+	
+	# $buffer_ref .= '<pre>'.$translated.'</pre>';
+	
+	# returning as string, or adding to output buffer?
+	if($return) { return $buffer_ref; }
+	
+	$kbzb::out->append_output($buffer_ref);
+
+}
+
+# we just want a sub with practically no variables declared with "my ..."
+sub expand {
+	my ($self) = @_; # nothing but $self for now.
+	eval $_[1];
+	return $@;
+}
+
 
 #
 # Initialize
